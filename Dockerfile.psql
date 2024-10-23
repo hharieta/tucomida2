@@ -1,0 +1,36 @@
+FROM postgres:17-bookworm
+
+LABEL maintainer="Gatovsky"
+
+# Define ARGs that Docker Compose will pass during build
+ARG DB_USER
+ARG USER_GROUP
+
+# RUN apt-get update && \
+#     apt-get install -y locales && \
+#     locale-gen es_ES.UTF-8 && \
+#     apt-get clean && \
+#     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# ENV LANG es_ES.UTF-8
+# ENV LANGUAGE es_ES:es
+# ENV LC_ALL es_ES.UTF-8
+
+# Create a new user and group (Asegúrate de usar USER_GROUP y DB_USER correctamente)
+# RUN echo "DB_USER=${DB_USER}, USER_GROUP=${USER_GROUP}" \
+#     && groupadd -r ${USER_GROUP} \
+#     && useradd -r -g ${USER_GROUP} ${DB_USER}
+
+
+# # Change ownership of the PostgreSQL data directory
+# RUN chown -R ${DB_USER}:${USER_GROUP} /var/lib/postgresql/data
+
+# # Switch to the new user
+# USER ${DB_USER}
+
+
+# Expose the PostgreSQL port
+EXPOSE 5432
+
+# Set the default command to run PostgreSQL
+CMD ["postgres"]

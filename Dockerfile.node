@@ -1,0 +1,29 @@
+FROM  node:22-bookworm-slim
+
+LABEL maintainer="Gatovsky"
+
+ARG NODE_ENV=dev
+ARG NEST_PORT=3000
+ENV NODE_ENV=${NODE_ENV}
+ENV NEST_PORT=${NEST_PORT}
+
+RUN groupadd -r nodegroup && useradd -r -g nodegroup -d /home/nodeuser -m -s /bin/bash nodeuser
+
+
+WORKDIR /home/nodeuser/app
+
+COPY app/package.json .
+
+RUN npm install -g pnpm @nestjs/cli \
+ && pnpm install
+
+COPY app .
+RUN chown -R nodeuser:nodegroup .
+
+USER nodeuser
+
+RUN pnpm run build
+
+EXPOSE ${NEST_PORT}
+
+CMD [ "sh", "-c", "pnpm run start:${NODE_ENV}"]
